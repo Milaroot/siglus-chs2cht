@@ -37,7 +37,7 @@
 需要 [Rust](https://rustup.rs/) 工具鏈（1.70+）。
 
 ```bash
-git clone https://github.com/<your-username>/siglus-chs2cht.git
+git clone https://github.com/Milaroot/siglus-chs2cht.git
 cd siglus-chs2cht
 cargo build --release
 ```
