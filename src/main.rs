@@ -4,6 +4,7 @@ mod gameexe;
 mod scene;
 mod script;
 
+use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
@@ -26,6 +27,11 @@ fn convert_scene(
     eprintln!("[1/3] Unpacking scene.chs ...");
     let scripts = scene::unpack_scene(scene_path, &ss_dir, None)?;
 
+    let scene_names: HashSet<String> = scripts
+        .iter()
+        .map(|(filename, _)| filename.strip_suffix(".ss").unwrap_or(filename).to_string())
+        .collect();
+
     eprintln!(
         "[2/3] Converting {} scripts (CHS -> CHT) ...",
         scripts.len()
@@ -42,6 +48,11 @@ fn convert_scene(
 
         let mut new_texts = Vec::new();
         for (idx, text) in &texts {
+            if scene_names.contains(text.as_str()) {
+                new_texts.push((*idx, text.clone()));
+                total_strings += 1;
+                continue;
+            }
             let converted = converter.convert(text);
             if converted != *text {
                 converted_count += 1;
